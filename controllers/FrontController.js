@@ -143,7 +143,7 @@ class FrontController {
             html:
                 "<p>Hii " +
                 name +
-                ',Please click here to <a href="https://college-portal-jqin.onrender.com/register/verify?id=' +
+                ',Please click here to <a href="https://college-portal-2hf9.onrender.com/register/verify?id=' +
                 user_id +
                 '">Verify</a>Your mail</p>.',
         });
@@ -230,67 +230,6 @@ class FrontController {
             console.log(error);
         }
     };
-
-    static verifyLogin = async (req, res) => {
-        try {
-            const { email, password } = req.body;
-            if (email && password) {
-                const inUser = await UserModel.findOne({ email: email });
-                if (inUser != null) {
-                    const isMatched = await bcrypt.compare(password, inUser.password);
-                    //  console.log(isMatched)
-                    if (isMatched) {
-                        if (inUser.role == "admin" && inUser.is_verify == 1) {
-                            //token create
-                            var jwt = require("jsonwebtoken");
-                            let token = jwt.sign({ Id: inUser.id }, "kuch bhii");
-                            //console.log(token)middleware
-                            res.cookie("token", token, {
-                                httpOnly: true,
-                                secure: true,
-                                maxAge: 3600000,
-                            });
-                            res.redirect("/admin/dashboard");
-                        } else if (inUser.role == "student" && inUser.is_verify == 1) {
-                            //token create
-                            var jwt = require("jsonwebtoken");
-                            let token = jwt.sign({ Id: inUser.id }, "kuchh bhii");
-                            //console.log(token)middleware
-                            // res.cookie('token', token,{maxAge: 60000});
-                            res.cookie("token", token, {
-                                httpOnly: true,
-                                secure: true,
-                                maxAge: 3600000, // Expires in 1 hrs
-                            });
-                            if (req.session) {
-                                req.session.destroy((err) => {
-                                    if (err) {
-                                        console.error("Error destroying session:", err);
-                                    }
-                                });
-                            }
-                            res.redirect("/home");
-                        } else {
-                            req.flash("error", "Please verify your Email.");
-                            return res.redirect("/");
-                        }
-                    } else {
-                        req.flash("error", "Email and Password is not correct.");
-                        return res.redirect("/");
-                    }
-                } else {
-                    req.flash("error", "you are not a register user");
-                    return res.redirect("/");
-                }
-            } else {
-                req.flash("error", "All fields Required");
-                return res.redirect("/");
-            }
-        } catch (error) {
-            console.log(error);
-        }
-    };
-
 
     //logout
     static logout = async (req, res) => {
@@ -462,7 +401,7 @@ class FrontController {
             text: "heelo", // plain text body
             html: "<p>Hii " +
                 name +
-                ',Please click here to <a href="https://college-portal-jqin.onrender.com/reset-password?token=' +
+                ',Please click here to <a href="https://college-portal-2hf9.onrender.com/reset-password?token=' +
                 token +
                 '">Reset</a>Your Password.',
 
